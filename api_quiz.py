@@ -1,5 +1,4 @@
 from win10toast import ToastNotifier
-import schedule
 import requests
 import json
 import sqlite3
