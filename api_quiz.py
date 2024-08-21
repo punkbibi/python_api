@@ -1,12 +1,16 @@
-from win10toast import ToastNotifier
+from windows_toasts import WindowsToaster, Toast, ToastAudio, AudioSource, ToastDuration, ToastButton
 import requests
 import json
 import sqlite3
+import os
+from dotenv import load_dotenv
 
+
+def show_toast(toast, title, msg):
+    toast.show_toast(title=title, msg=msg, duration=14)
 
 def joke():
-    global joke_actually
-    toast = ToastNotifier()
+    toaster = WindowsToaster('Python')
     url = "https://api.chucknorris.io/jokes/random"
     response = requests.get(url)
     result = response.json()
@@ -18,18 +22,23 @@ def joke():
 
     joke_actually = result["value"]
     print(joke_actually)
-    toast.show_toast(title='New joke', msg=joke_actually, duration=14)
+    newToast = Toast()
+    newToast.text_fields = [joke_actually]
+    newToast.title = "Chuck Norris Joke"
+    newToast.audio = ToastAudio(AudioSource.Reminder, looping=False)
+    newToast.duration = ToastDuration(ToastDuration.Short)
+    toaster.show_toast(newToast)
+    return joke_actually
 
-
-joke()
+joke_actually = joke()
 
 
 
 
 
 # ------------------------------------------
-
-api_key = "564f99316c38fb22304897a2"
+load_dotenv()
+api_key = os.getenv("API_KEY")
 
 ex_url = "https://v6.exchangerate-api.com/v6/"
 
